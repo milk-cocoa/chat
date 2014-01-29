@@ -4,36 +4,38 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Landing Page</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
             <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+            <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
             <script src="http://127.0.0.1:3000/js/milkcocoa.js"></script>
             <script>
                 pour_the_milk("127.0.0.1:3000", "milktest", function() {
-                              var ds = new milkcocoa.DataStore("root");
-                              ds.load(function(ds1, e) {
-                                      console.log(e);
-                                      ds.child("messages").load(function(ds, e) {
-                                                                for(var i=0;i < e.length;i++) {
-                                                                $("#messages").append(e[i].content + "<br>");
-                                                                }
-                                                                });
-                                      ds.child("messages").on("push", function(e) {
-                                                          console.log(e);
-                                                              $("#messages").append(e.content + "<br>");
-                                                          });
-                                      $("#post").click(function() {
-                                                      ds.child("messages").push({
-                                                                                title : "こんにちは",
-                                                                                content : $("#content").val()
-                                                                                }, function(e) {
-                                                                                });
-                                                      });
-                                      });
-                              })
+                    $("#post").button();
+                    $( "#content" ).resizable({handles: "none"});
+                    var ds = new milkcocoa.DataStore("root");
+                    ds.load(function(ds1, e) {
+                        ds.child("messages").load(function(ds, e) {
+                            for(var i=0;i < e.length;i++) {
+                                $("#messages").append(e[i].content + "<br>");
+                            }
+                        });
+                        ds.child("messages").on("push", function(e) {
+                            $("#messages").append(e.content + "<br>");
+                        });
+                        $("#post").click(function() {
+                            ds.child("messages").push({
+                                title : "タイトル",
+                                content : $("#content").val()
+                            }, function(e) {
+                            });
+                        });
+                    });
+                })
                 </script>
     </head>
     <body>
-        <div id="messages"></div>
-        <textarea id="content"></textarea>
+        <textarea id="content" cols="32" rows="4"></textarea>
         <button id="post">Post</button>
+        <div id="messages"></div>
     </body>
 </html>

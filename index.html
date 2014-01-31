@@ -9,26 +9,35 @@
             <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
             <script src="http://127.0.0.1:3000/js/milkcocoa.js"></script>
             <script>
-                pour_the_milk("127.0.0.1:3000", "milktest", function() {
+            //injection
+        	function escapeHTML(val) {
+                return $('<div>').text(val).html();
+            };
+                pour_the_milk("127.0.0.1:3000", "firstapp", function() {
                     $("#post").button();
                     $( "#content" ).resizable({handles: "none"});
                     var ds = new milkcocoa.DataStore("root");
-                    ds.load(function(ds1, e) {
-                        ds.child("messages").load(function(ds, e) {
-                            for(var i=0;i < e.length;i++) {
-                                $("#messages").append(e[i].content + "<br>");
-                            }
-                        });
-                        ds.child("messages").on("push", function(e) {
-                            $("#messages").append(e.content + "<br>");
-                        });
-                        $("#post").click(function() {
-                            ds.child("messages").push({
-                                title : "タイトル",
-                                content : $("#content").val()
-                            }, function(e) {
-                                $("#content").val("");
+                    ds.child("messages").findMany(-7, 7, function(messageStore, e) {
+                        for(var i=0;i < e.length;i++) {
+                            $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
+                            /*
+                            $("#" + e[i].id).click(function() {
+                            	ds.child("messages").find($(this)[0].id, function(ds, mes) {
+                            		console.log(mes);
+                            	});
                             });
+                            */
+                        }
+                    });
+                    ds.child("messages").on("push", function(e) {
+                        $("#messages").append(escapeHTML(e.content) + "<br>");
+                    });
+                    $("#post").click(function() {
+                        ds.child("messages").push({
+                            title : "タイトル",
+                            content : $("#content").val()
+                        }, function(e) {
+                            $("#content").val("");
                         });
                     });
                 })

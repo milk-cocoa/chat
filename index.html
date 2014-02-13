@@ -7,33 +7,26 @@
             <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
             <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
             <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-            <script src="http://127.0.0.1:3000/js/milkcocoa.js"></script>
+            <script src="http://mlkcca.com/js/milkcocoa.js"></script>
             <script>
             //injection
         	function escapeHTML(val) {
                 return $('<div>').text(val).html();
             };
-                pour_the_milk("127.0.0.1:3000", "firstapp", function() {
+                pour_the_milk("mlkcca.com", "chatapp", function() {
                     $("#post").button();
                     $( "#content" ).resizable({handles: "none"});
-                    var ds = new milkcocoa.DataStore("root");
-                    ds.child("messages").findMany(-7, 7, function(messageStore, e) {
+                    var ds = new milkcocoa.DataStore("message");
+                    ds.findMany({}).done(function(e) {
                         for(var i=0;i < e.length;i++) {
                             $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
-                            /*
-                            $("#" + e[i].id).click(function() {
-                            	ds.child("messages").find($(this)[0].id, function(ds, mes) {
-                            		console.log(mes);
-                            	});
-                            });
-                            */
                         }
                     });
-                    ds.child("messages").on("push", function(e) {
+                    ds.on("push", function(e) {
                         $("#messages").append(escapeHTML(e.content) + "<br>");
                     });
                     $("#post").click(function() {
-                        ds.child("messages").push({
+                        ds.push({
                             title : "タイトル",
                             content : $("#content").val()
                         }, function(e) {

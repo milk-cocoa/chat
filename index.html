@@ -17,7 +17,7 @@
                     $("#post").button();
                     $( "#content" ).resizable({handles: "none"});
                     var ds = new milkcocoa.DataStore("message");
-                    ds.findMany({}).done(function(e) {
+                    ds.query({}).done(function(e) {
                         for(var i=0;i < e.length;i++) {
                             $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
                         }

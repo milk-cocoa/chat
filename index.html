@@ -7,33 +7,34 @@
             <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
             <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
             <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-            <script src="http://mlkcca.com/js/milkcocoa.js"></script>
+            <script src="http://mlkcca.com/js/v2/milkcocoa.js"></script>
             <script>
             //injection
         	function escapeHTML(val) {
                 return $('<div>').text(val).html();
             };
-                pour_the_milk("mlkcca.com", "chatapp", function() {
-                    $("#post").button();
-                    $( "#content" ).resizable({handles: "none"});
-                    var ds = new milkcocoa.DataStore("message");
-                    ds.query({}).done(function(e) {
-                        for(var i=0;i < e.length;i++) {
-                            $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
-                        }
+            $(function() {
+            	var milkcocoa = new MilkCocoa("https://mlkcca.com:3000", "chatapp", function() {});
+                $("#post").button();
+                $( "#content" ).resizable({handles: "none"});
+                var ds = milkcocoa.DataStore("message");
+                ds.query({}).done(function(e) {
+                    for(var i=0;i < e.length;i++) {
+                        $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
+                    }
+                });
+                ds.on("push", function(e) {
+                    $("#messages").append(escapeHTML(e.content) + "<br>");
+                });
+                $("#post").click(function() {
+                    ds.push({
+                        title : "タイトル",
+                        content : $("#content").val()
+                    }, function(e) {
+                        $("#content").val("");
                     });
-                    ds.on("push", function(e) {
-                        $("#messages").append(escapeHTML(e.content) + "<br>");
-                    });
-                    $("#post").click(function() {
-                        ds.push({
-                            title : "タイトル",
-                            content : $("#content").val()
-                        }, function(e) {
-                            $("#content").val("");
-                        });
-                    });
-                })
+                });
+            });
                 </script>
     </head>
     <body>

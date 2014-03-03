@@ -7,14 +7,14 @@
             <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
             <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
             <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-            <script src="http://mlkcca.com/js/v2/milkcocoa.js"></script>
+            <script src="http://cdn.mlkcca.com/v2.1/milkcocoa.js"></script>
             <script>
             //injection
         	function escapeHTML(val) {
                 return $('<div>').text(val).html();
             };
             $(function() {
-            	var milkcocoa = new MilkCocoa("https://mlkcca.com:3000", "chatapp", function() {});
+            	var milkcocoa = new MilkCocoa("https://mlkcca.com", "your app id", function() {});
                 $("#post").button();
                 $( "#content" ).resizable({handles: "none"});
                 var ds = milkcocoa.DataStore("message");
@@ -24,7 +24,7 @@
                     }
                 });
                 ds.on("push", function(e) {
-                    $("#messages").append(escapeHTML(e.content) + "<br>");
+                    $("#messages").append(escapeHTML(e.value.content) + "<br>");
                 });
                 $("#post").click(function() {
                     ds.push({

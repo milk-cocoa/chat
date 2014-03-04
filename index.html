@@ -9,32 +9,37 @@
             <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
             <script src="http://cdn.mlkcca.com/v2.1/milkcocoa.js"></script>
             <script>
-            //injection
-        	function escapeHTML(val) {
-                return $('<div>').text(val).html();
-            };
             $(function() {
+                //1.ミルクココアインスタンスを作成
             	var milkcocoa = new MilkCocoa("https://mlkcca.com", "your app id", function() {});
+                //Jquery UI　ボタンを作成
                 $("#post").button();
-                $( "#content" ).resizable({handles: "none"});
+                //2."message"データストアを作成
                 var ds = milkcocoa.DataStore("message");
+                //3."message"データストアからメッセージを取ってくる
                 ds.query({}).done(function(e) {
                     for(var i=0;i < e.length;i++) {
                         $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
                     }
                 });
+                //4."message"データストアのプッシュイベントを監視
                 ds.on("push", function(e) {
                     $("#messages").append(escapeHTML(e.value.content) + "<br>");
                 });
                 $("#post").click(function() {
+                    //5."message"データストアにメッセージをプッシュする
                     ds.push({
                         title : "タイトル",
-                        content : $("#content").val()
+                        content : escapeHTML($("#content").val())
                     }, function(e) {
                         $("#content").val("");
                     });
                 });
             });
+            //インジェクション対策
+            function escapeHTML(val) {
+                return $('<div>').text(val).html();
+            };
                 </script>
     </head>
     <body>

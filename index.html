@@ -4,9 +4,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>milkcocoa chat</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+            <link rel="stylesheet" type="text/css" href="style.css">
             <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-            <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
             <script src="http://cdn.mlkcca.com/v2.1/milkcocoa.js"></script>
             <script>
             $(function() {
@@ -19,21 +18,44 @@
                 //3."message"データストアからメッセージを取ってくる
                 ds.query({}).done(function(e) {
                     for(var i=0;i < e.length;i++) {
-                        $("#messages").append('<div id="'+e[i].id+'">' + escapeHTML(e[i].content) + "</div>");
+                        renderMessage(e[i]);
                     }
                 });
                 //4."message"データストアのプッシュイベントを監視
                 ds.on("push", function(e) {
-                    $("#messages").append(escapeHTML(e.value.content) + "<br>");
+                    renderMessage(e.value);
+
                 });
-                $("#post").click(function() {
+
+                var last_message = "dummy";
+                function renderMessage(message) {
+                    var message_html = '<div>' + escapeHTML(message.content) + '</div>';
+                    var date_html = '';
+                    if(message.date) {
+                        date_html = '<div class="date">'+escapeHTML(message.date.toLocaleString())+'</div>';
+                    }
+                    $("#"+last_message).before('<div id="'+message.id+'" class="message">'+message_html + date_html +'</div>');
+                    last_message = message.id;
+                }
+
+                function post() {
                     //5."message"データストアにメッセージをプッシュする
                     ds.push({
                         title : "タイトル",
-                        content : escapeHTML($("#content").val())
+                        content : escapeHTML($("#content").val()),
+                        date : new Date()
                     }, function(e) {
                         $("#content").val("");
                     });
+                }
+
+                $('#post').click(function() {
+                    post();
+                })
+                $('#content').keydown(function(e) {
+                    if(e.which == 13) {
+                        post();
+                    }
                 });
             });
             //インジェクション対策
@@ -43,8 +65,19 @@
                 </script>
     </head>
     <body>
-        <textarea id="content" cols="32" rows="4"></textarea>
-        <button id="post">Post</button>
-        <div id="messages"></div>
+        <div class="container">
+            <div class="row">
+                <h2>Chat Application</h2>
+            </div>
+            <div class="row">
+                <textarea id="content" cols="32" class="post-area" placeholder="Enterで投稿"></textarea>
+                <button id="post" class="post-btn">投稿</button>
+            </div>
+            <div class="row">
+                <div id="messages" class="message-list">
+                    <div id="dummy"></div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

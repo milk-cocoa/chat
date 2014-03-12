@@ -1,0 +1,65 @@
+h2 {
+	color: #232323;
+}
+
+.container {
+	width: 70%;
+	padding: 12px;
+	background-color: #c7c7c7;
+	margin: 0 auto;
+}
+
+.row {
+	padding: 12px 0px;
+}
+
+.row:after {
+	display:block;
+	clear:both;
+	height:0px;
+	visibility:hidden;
+	content:".";
+}
+
+.message-list {
+	padding: 12px 12px;
+}
+
+.message {
+	padding: 12px 12px;
+	width: 90%;
+	background: #ffffff;
+	border: 1px solid #a0a0a0;
+	border-radius: 4px;
+	font-weight: bold;  
+    color: #666;
+    font-size: 1em;
+}
+
+.date {
+	right: 12px;
+	text-align: right;
+    color: #777;
+    font-size: 0.6em;	
+}
+
+.post-area {
+	width: 82%;
+	height: 42px;
+	resize: none;
+    font-size: 1.6em;
+    float: left;
+}
+
+.post-btn {
+	width: 10%;
+	height: 47px;
+	background: #73a3ff;
+	border: none;
+	padding: 0px 10px;
+	font-weight: bold;  
+    cursor: pointer;  
+    color: #fff;
+    font-size: 1em;
+}
+

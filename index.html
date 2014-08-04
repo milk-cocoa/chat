@@ -1,83 +1,111 @@
 <!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>milkcocoa chat</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" type="text/css" href="style.css">
-            <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-            <script src="http://cdn.mlkcca.com/v2.1/milkcocoa.js"></script>
-            <script>
-            $(function() {
-                //1.ミルクココアインスタンスを作成
-            	var milkcocoa = new MilkCocoa("https://mlkcca.com", "your app id", function() {});
-                //Jquery UI　ボタンを作成
-                $("#post").button();
-                //2."message"データストアを作成
-                var ds = milkcocoa.DataStore("message");
-                //3."message"データストアからメッセージを取ってくる
-                ds.query({}).done(function(e) {
-                    for(var i=0;i < e.length;i++) {
-                        renderMessage(e[i]);
-                    }
-                });
-                //4."message"データストアのプッシュイベントを監視
-                ds.on("push", function(e) {
-                    renderMessage(e.value);
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta property="og:title" content="Milkcocoaで作ったリアルタイムチャット" />
+    <meta property="og:type" content="chat" />
+    <meta property="og:description" content="BaaS（Milkcocoa）で作られたリアルタイムチャット" />
+    <title>Milkcocoaで作ったリアルタイムチャット</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://cdn.mlkcca.com/v1.0.0/milkcocoa.js"></script>
+    <script>
+    $(function() {
+        //1.ミルクココアインスタンスを作成
+        var milkcocoa = new MilkCocoa("https://io-yourappid.mlkcca.com");
 
-                });
+        //2."message"データストアを作成
+        var ds = milkcocoa.DataStore("message");
 
-                var last_message = "dummy";
-                function renderMessage(message) {
-                    var message_html = '<div>' + escapeHTML(message.content) + '</div>';
-                    var date_html = '';
-                    if(message.date) {
-                        date_html = '<div class="date">'+escapeHTML(message.date.toLocaleString())+'</div>';
-                    }
-                    $("#"+last_message).before('<div id="'+message.id+'" class="message">'+message_html + date_html +'</div>');
-                    last_message = message.id;
-                }
+        //3."message"データストアからメッセージを取ってくる
+        ds.query({}).done(function(e) {
+            for(var i=0;i < e.length;i++) {
+                renderMessage(e[i]);
+            }
+        });
 
-                function post() {
-                    //5."message"データストアにメッセージをプッシュする
-                    ds.push({
-                        title : "タイトル",
-                        content : escapeHTML($("#content").val()),
-                        date : new Date()
-                    }, function(e) {
-                        $("#content").val("");
-                    });
-                }
+        //4."message"データストアのプッシュイベントを監視
+        ds.on("push", function(e) {
+            renderMessage(e.value);
+        });
 
-                $('#post').click(function() {
-                    post();
-                })
-                $('#content').keydown(function(e) {
-                    if(e.which == 13) {
-                        post();
-                    }
-                });
-            });
-            //インジェクション対策
-            function escapeHTML(val) {
-                return $('<div>').text(val).html();
-            };
-                </script>
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <h2>Chat Application</h2>
+        var last_message = "dummy";
+
+        function renderMessage(message) {
+            var message_html = '<p class="post-text">' + escapeHTML(message.content) + '</p>';
+            var date_html = '';
+            if(message.date) {
+                date_html = '<p class="post-date">'+escapeHTML(message.date.toLocaleString())+'</p>';
+            }
+            $("#"+last_message).before('<div id="'+message.id+'" class="post">'+message_html + date_html +'</div>');
+            last_message = message.id;
+        }
+
+        function post() {
+            //5."message"データストアにメッセージをプッシュする
+            var content = escapeHTML($("#content").val());
+            if (content && content !== "") {
+                ds.push({
+                    title: "タイトル",
+                    content: content,
+                    date: new Date()
+                }, function (e) {});
+            }
+            $("#content").val("");
+        }
+
+        $('#post').click(function () {
+            post();
+        })
+        $('#content').keydown(function (e) {
+            if (e.which == 13){
+                post();
+                return false;
+            }
+        });
+    });
+    //インジェクション対策
+    function escapeHTML(val) {
+        return $('<div>').text(val).html();
+    };
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <h1 class="logo">CHAT</h1>
+    </div>
+
+    <div class="container">
+        <div class="postarea cf">
+
+            <div class="postarea-text">
+                <textarea name="" id="content" cols="30" rows="10" placeholder="Enterで投稿"></textarea>
             </div>
-            <div class="row">
-                <textarea id="content" cols="32" class="post-area" placeholder="Enterで投稿"></textarea>
-                <button id="post" class="post-btn">投稿</button>
-            </div>
-            <div class="row">
-                <div id="messages" class="message-list">
-                    <div id="dummy"></div>
+
+            <div class="postarea-share cf">
+                <p>このチャットをシェアする！</p>
+                <div class="postarea-share-button cf">
+                    <script>
+                    var url = encodeURIComponent(location.href);
+                    document.write('<iframe src="//www.facebook.com/plugins/like.php?href='+url+'&amp;width&amp;layout=button&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:20px;" allowTransparency="true"></iframe>');
+                    </script>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja" data-count="none">ツイート</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                 </div>
             </div>
+
+
+            <button id="post" class="postarea-button">投稿する</button>
         </div>
-    </body>
+    </div>
+
+    <div id="messages" class="content">
+        <div id="dummy"></div>
+    </div>
+
+    <p class="footer"><strong>Powered by <a href="http://mlkcca.com/">Milkcocoa</a></strong></p>
+</body>
 </html>

@@ -20,9 +20,9 @@
         var ds = milkcocoa.DataStore("message");
 
         //3."message"データストアからメッセージを取ってくる
-        ds.query({}).sort("desc").done(function(e) {
-            e.reverse().forEach(function(m) {
-                renderMessage(m);
+        ds.stream().sort("desc").next(function(err, datas) {
+            datas.forEach(function(data) {
+                renderMessage(data.value);
             });
         });
 

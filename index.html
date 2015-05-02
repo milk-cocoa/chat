@@ -10,11 +10,11 @@
     <title>Milkcocoaで作ったリアルタイムチャット</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="http://cdn.mlkcca.com/v0.2.8/milkcocoa.js"></script>
+    <script src="http://cdn.mlkcca.com/v2.0.0/milkcocoa.js"></script>
     <script>
     $(function() {
         //1.ミルクココアインスタンスを作成
-        var milkcocoa = new MilkCocoa("https://io-demochat.mlkcca.com");
+        var milkcocoa = new MilkCocoa("{your-app-id}.mlkcca.com");
 
         //2."message"データストアを作成
         var ds = milkcocoa.DataStore("message");

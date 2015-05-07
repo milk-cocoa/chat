@@ -17,7 +17,7 @@
         var milkcocoa = new MilkCocoa("{your-app-id}.mlkcca.com");
 
         //2."message"データストアを作成
-        var ds = milkcocoa.DataStore("message");
+        var ds = milkcocoa.dataStore("message");
 
         //3."message"データストアからメッセージを取ってくる
         ds.stream().sort("desc").next(function(err, datas) {
@@ -37,7 +37,7 @@
             var message_html = '<p class="post-text">' + escapeHTML(message.content) + '</p>';
             var date_html = '';
             if(message.date) {
-                date_html = '<p class="post-date">'+escapeHTML(message.date.toLocaleString())+'</p>';
+                date_html = '<p class="post-date">'+escapeHTML( new Date(message.date).toLocaleString())+'</p>';
             }
             $("#"+last_message).before('<div id="'+message.id+'" class="post">'+message_html + date_html +'</div>');
             last_message = message.id;

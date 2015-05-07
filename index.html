@@ -17,7 +17,7 @@
         var milkcocoa = new MilkCocoa("flagi9edsvtg.mlkcca.com");
 
         //2."message"データストアを作成
-        var ds = milkcocoa.DataStore("message");
+        var ds = milkcocoa.dataStore("message");
 
         //3."message"データストアからメッセージを取ってくる
         ds.stream().sort("desc").next(function(err, datas) {

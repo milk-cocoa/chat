@@ -37,7 +37,7 @@
             var message_html = '<p class="post-text">' + escapeHTML(message.value.content) + '</p>';
             var date_html = '';
             if(message.value.date) {
-                date_html = '<p class="post-date">'+escapeHTML(message.value.date.toLocaleString())+'</p>';
+                date_html = '<p class="post-date">'+escapeHTML( new Date(message.value.date).toLocaleString())+'</p>';
             }
             $("#"+last_message).before('<div id="'+message.id+'" class="post">'+message_html + date_html +'</div>');
             last_message = message.id;

@@ -13,6 +13,25 @@
     <script src="http://cdn.mlkcca.com/v2.0.0/milkcocoa.js"></script>
     <script>
     $(function() {
+
+        $.get('https://flagi9edsvtg.mlkcca.com/api', {
+            path : 'message',
+            limit : 50,
+            sort : 'DESC',
+            api : 'query',
+            appid : 'flagi9edsvtg'
+        }, function(data) {
+            data.content.d.map(function(d) {
+                return {
+                    id : d.id,
+                    value : JSON.parse(d.value)
+                }
+            }).forEach(function(data) {
+                renderMessage(data);
+            });
+
+        }, 'json');
+        /*
         //1.ミルクココアインスタンスを作成
         var milkcocoa = new MilkCocoa("flagi9edsvtg.mlkcca.com");
 
@@ -30,6 +49,7 @@
         ds.on("push", function(e) {
             renderMessage(e);
         });
+        */
 
         var last_message = "dummy";
 
@@ -84,8 +104,6 @@
             <div class="postarea-text">
                 <textarea name="" id="content" cols="30" rows="10" placeholder="Enterで投稿"></textarea>
             </div>
-
-            <!--
             <div class="postarea-share cf">
                 <p>このチャットをシェアする！</p>
                 <div class="postarea-share-button cf">
@@ -97,7 +115,6 @@
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                 </div>
             </div>
-        -->
 
 
             <button id="post" class="postarea-button">投稿する</button>

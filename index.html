@@ -10,28 +10,9 @@
     <title>Milkcocoaで作ったリアルタイムチャット</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="http://cdn.mlkcca.com/v2.0.0/milkcocoa.js"></script>
+    <script src="milkcocoa.js"></script>
     <script>
     $(function() {
-
-        $.get('https://flagi9edsvtg.mlkcca.com/api', {
-            path : 'message',
-            limit : 50,
-            sort : 'DESC',
-            api : 'query',
-            appid : 'flagi9edsvtg'
-        }, function(data) {
-            data.content.d.map(function(d) {
-                return {
-                    id : d.id,
-                    value : JSON.parse(d.value)
-                }
-            }).forEach(function(data) {
-                renderMessage(data);
-            });
-
-        }, 'json');
-        /*
         //1.ミルクココアインスタンスを作成
         var milkcocoa = new MilkCocoa("flagi9edsvtg.mlkcca.com");
 
@@ -49,7 +30,6 @@
         ds.on("push", function(e) {
             renderMessage(e);
         });
-        */
 
         var last_message = "dummy";
 
